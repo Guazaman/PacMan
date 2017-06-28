@@ -7,6 +7,9 @@ public class GameBoard : MonoBehaviour {
 	private static int boardWidth = 28;
 	private static int boardHeight = 36;
 
+	public int totalPellets = 0;
+	public int score = 0;
+
 	public GameObject[,] board = new GameObject[boardWidth, boardHeight];
 
 	// Use this for initialization
@@ -18,6 +21,13 @@ public class GameBoard : MonoBehaviour {
 			Vector2 pos = o.transform.position;
 
 			if (o.name != "PacMan" && o.name != "Nodes" && o.name != "NonNodes" && o.name != "Maze" && o.name != "Pellets") {
+
+				if (o.GetComponent<Tile> () != null) {
+					if (o.GetComponent<Tile> ().isPellet || o.GetComponent<Tile> ().isSuperPellet) {
+						totalPellets++;
+					}
+				}
+
 				board [(int)pos.x, (int)pos.y] = o;
 			} else {
 				Debug.Log ("Found PacMan at: " + pos);
