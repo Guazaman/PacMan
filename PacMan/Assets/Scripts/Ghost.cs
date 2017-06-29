@@ -5,9 +5,13 @@ using UnityEngine;
 public class Ghost : MonoBehaviour {
 
 	public float moveSpeed = 3.9f;
+    public float frightenedModeMoveSpeed = 2.9f;
 
 	public int pinkyReleaseTimer = 5;
 	public float ghostReleaseTimer = 0;
+
+    public int frightenedModeDuration = 10;
+    public int startBlinkingAt = 7;
 
 	public bool isInGhostHouse = false;
 
@@ -20,10 +24,19 @@ public class Ghost : MonoBehaviour {
 	public int scatterModeTimer3 = 5;
 	public int chaseModeTimer3 = 20;
 	public int scatterModeTimer4 = 5;
-	//public int chaseModeTimer4 = 20;
+    //public int chaseModeTimer4 = 20;
+
+    public RuntimeAnimatorController ghostWhite, ghostBlue, normalGhost;
 
 	private int modeChangeIteration = 1;
 	private float modeChangeTimer = 0;
+
+    private float frightenedModeTimer = 0;
+    private float blinkTimer = 0;
+
+    private bool frightenedModeIsWhite = false;
+
+    private float previousMoveSpeed;
 
 	public enum Mode{
 		Chase,
@@ -84,6 +97,18 @@ public class Ghost : MonoBehaviour {
 		ReleaseGhost ();
 	}
 
+    void UpdateAnimatorController()
+    {
+        if(currentMode == Mode.Frightened)
+        {
+            transform.GetComponent<Animator>().runtimeAnimatorController = ghostBlue;
+        }
+        else
+        {
+            transform.GetComponent<Animator>().runtimeAnimatorController = normalGhost;
+        }
+    }
+
 	void Move(){
 		if(targetNode != currentNode && targetNode != null && !isInGhostHouse){
 			if (OverShotTarget ()) {
@@ -99,11 +124,12 @@ public class Ghost : MonoBehaviour {
 				targetNode = ChooseNextNode ();
 				previousNode = currentNode;
 				currentNode = null;
+                UpdateAnimatorController();
 			} else {
 				transform.localPosition += (Vector3)direction * moveSpeed * Time.deltaTime;
-			}
-		}
-	}
+            }
+        }
+    }
 
 	void ModeUpdate(){
 		if(currentMode != Mode.Frightened){
@@ -151,13 +177,59 @@ public class Ghost : MonoBehaviour {
 				}
 			}
 		}else if (currentMode == Mode.Frightened){
-			
+            frightenedModeTimer += Time.deltaTime;
+
+            if(frightenedModeTimer >= frightenedModeDuration)
+            {
+                frightenedModeTimer = 0;
+                ChangeMode(previousMode);
+            }
+
+            if(frightenedModeTimer >= startBlinkingAt)
+            {
+                blinkTimer += Time.deltaTime;
+
+                if(blinkTimer >= 0.1f)
+                {
+                    blinkTimer = 0f;
+
+                    if (frightenedModeIsWhite)
+                    {
+                        transform.GetComponent<Animator>().runtimeAnimatorController = ghostBlue;
+                        frightenedModeIsWhite = false;
+                    }
+                    else
+                    {
+                        transform.GetComponent<Animator>().runtimeAnimatorController = ghostWhite;
+                        frightenedModeIsWhite = true;
+                    }
+                }
+
+            }
 		} 
 	}
 
 	void ChangeMode(Mode m){
-		currentMode = m;
-	}
+
+        if(currentMode == Mode.Frightened)
+        {
+            moveSpeed = previousMoveSpeed;
+        }
+
+        if(m == Mode.Frightened)
+        {
+            previousMoveSpeed = moveSpeed;
+            moveSpeed = frightenedModeMoveSpeed;
+        }
+        previousMode = currentMode;
+        currentMode = m;
+        UpdateAnimatorController();
+    }
+
+    public void StartFrightenedMode()
+    {
+        ChangeMode(Mode.Frightened);
+    }
 
 	Vector2 GetRedGhostTargetTile(){
 		Vector2 pacManPosition = pacMan.transform.localPosition;
