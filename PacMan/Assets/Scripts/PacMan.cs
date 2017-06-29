@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PacMan : MonoBehaviour {
 
+	public Vector2 orientation;
+
 	public AudioClip chomp1, chomp2;
 
 	public float speed = 4.0f;
@@ -33,6 +35,8 @@ public class PacMan : MonoBehaviour {
 		}
 
 		direction = Vector2.left;
+		orientation = Vector2.left;
+
 		ChangePosition (direction);
 
 	}
@@ -147,15 +151,19 @@ public class PacMan : MonoBehaviour {
 
 	void UpdateOrientation(){
 		if (direction == Vector2.left) {
+			orientation = Vector2.left;
 			transform.localScale = new Vector3(-1, 1, 1);
 			transform.localRotation = Quaternion.Euler (0,0,0);
 		} else if (direction == Vector2.right) {
+			orientation = Vector2.right;
 			transform.localScale = new Vector3(1, 1, 1);
 			transform.localRotation = Quaternion.Euler (0,0,0);
 		} else if (direction == Vector2.up) {
+			orientation = Vector2.up;
 			transform.localScale = new Vector3 (1, 1, 1);
 			transform.localRotation = Quaternion.Euler (0, 0, 90);
 		} else if (direction == Vector2.down) {
+			orientation = Vector2.down;
 			transform.localScale = new Vector3 (1, 1, 1);
 			transform.localRotation = Quaternion.Euler (0, 0, 270);
 		}
