@@ -49,7 +49,7 @@ public class PacMan : MonoBehaviour {
 
 		ConsumePellet (); 
 
-		Debug.Log("SCORE: " + GameObject.Find("Game").GetComponent<GameBoard>().score);
+		//Debug.Log("SCORE: " + GameObject.Find("Game").GetComponent<GameBoard>().score);
 	}
 
 	void playChompSound(){
