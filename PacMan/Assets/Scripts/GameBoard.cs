@@ -20,7 +20,7 @@ public class GameBoard : MonoBehaviour {
 		foreach (GameObject o in objects) {
 			Vector2 pos = o.transform.position;
 
-			if (o.name != "PacMan" && o.name != "Nodes" && o.name != "NonNodes" && o.name != "Maze" && o.name != "Pellets" && o.tag != "Ghost") {
+			if (o.name != "PacMan" && o.name != "Nodes" && o.name != "NonNodes" && o.name != "Maze" && o.name != "Pellets" && o.tag != "Ghost" && o.tag != "ghostHome") {
 
 				if (o.GetComponent<Tile> () != null) {
 					if (o.GetComponent<Tile> ().isPellet || o.GetComponent<Tile> ().isSuperPellet) {
