@@ -213,7 +213,7 @@ public class Ghost : MonoBehaviour {
 		Vector2 targetTile = pacManTile + (2 * pacManOrientation);
 
 		// Temporary BlueGhost position
-		Vector2 tempBlueGhostPosition = GameObject.Find("ghost_blue").transform.localPosition;
+		Vector2 tempBlueGhostPosition = GameObject.Find("Ghost_Blinky").transform.localPosition;
 
 		int blueGhostPositionX = Mathf.RoundToInt (tempBlueGhostPosition.x);
 		int blueGhostPositionY = Mathf.RoundToInt (tempBlueGhostPosition.y);
