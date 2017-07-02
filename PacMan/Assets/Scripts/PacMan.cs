@@ -8,7 +8,7 @@ public class PacMan : MonoBehaviour {
 
 	public AudioClip chomp1, chomp2;
 
-	public float speed = 4.0f;
+	public float speed = 6.0f;
 
 	public Sprite idleSprite;
 	private Vector2 direction = Vector2.zero;
@@ -190,6 +190,15 @@ public class PacMan : MonoBehaviour {
 					GameObject.Find ("Game").GetComponent<GameBoard> ().score += 1;
 					pelletsConsumed++;
 					playChompSound ();
+
+					if (tile.isSuperPellet) {
+
+						GameObject[] ghosts = GameObject.FindGameObjectsWithTag ("Ghost");
+
+						foreach (GameObject go in ghosts) {
+							go.GetComponent<Ghost> ().StartFrightenedMode ();
+						}
+					}
 				}
 			}
 		}
