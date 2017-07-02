@@ -28,6 +28,8 @@ public class Ghost : MonoBehaviour {
 	private int modeChangeIteration = 1;
 	private float modeChangeTimer = 0;
 
+	public RuntimeAnimatorController ghostUp, ghostDown, ghostLeft, ghostRight;
+
 	public enum Mode{
 		Chase,
 		Scatter,
@@ -73,6 +75,7 @@ public class Ghost : MonoBehaviour {
 
 		previousNode = currentNode;
 
+		UpdateAnimatorController ();
 		//Vector2 pacmanPosition = pacMan.transform.position;
 		//Vector2 targetTile = new Vector2 (Mathf.RoundToInt(pacmanPosition.x), Mathf.RoundToInt(pacmanPosition.y));
 		//targetNode = GetNodeAtPosition (targetTile);
@@ -85,6 +88,20 @@ public class Ghost : MonoBehaviour {
 		ModeUpdate ();
 		Move ();
 		ReleaseGhost ();
+	}
+
+	void UpdateAnimatorController(){
+		if (direction == Vector2.up) {
+			transform.GetComponent<Animator> ().runtimeAnimatorController = ghostUp;
+		} else if (direction == Vector2.down) {
+			transform.GetComponent<Animator> ().runtimeAnimatorController = ghostDown;
+		} else if (direction == Vector2.left) {
+			transform.GetComponent<Animator> ().runtimeAnimatorController = ghostLeft;
+		} else if (direction == Vector2.right) {
+			transform.GetComponent<Animator> ().runtimeAnimatorController = ghostRight;
+		} else {
+			transform.GetComponent<Animator> ().runtimeAnimatorController = ghostLeft;
+		}
 	}
 
 	void Move(){
@@ -102,6 +119,7 @@ public class Ghost : MonoBehaviour {
 				targetNode = ChooseNextNode ();
 				previousNode = currentNode;
 				currentNode = null;
+				UpdateAnimatorController ();
 			} else {
 				transform.localPosition += (Vector3)direction * moveSpeed * Time.deltaTime;
 			}
